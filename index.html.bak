@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <title>DeskFlix - Login</title>
+
+  <style>
+    :root {
+      --black: #080a0b;
+      --card: #181d1e;
+      --input: #22292a;
+      --green: #00e676;
+      --white: #f5f7f6;
+      --muted: #9aa5a0;
+      --danger: #ff6b6b;
+      --success: #6fffb0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: var(--black);
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+      /* CORREÇÃO: permite scroll quando o conteúdo é maior que a tela */
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .auth-page {
+      /* CORREÇÃO: min-height ao invés de height fixo, permite crescer */
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* CORREÇÃO: padding vertical maior pra não cortar no celular */
+      padding: 40px 16px;
+      background: radial-gradient(circle at top, #1c2723 0%, #080a0b 48%);
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 400px;
+      /* CORREÇÃO: padding menor nos lados pra caber melhor no celular */
+      padding: 28px 20px;
+      border: 1px solid #293331;
+      border-radius: 20px;
+      background: rgba(24, 29, 30, 0.96);
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.55);
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 10px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: var(--green);
+      color: #080a0b;
+      font-size: 28px;
+      font-weight: 900;
+      box-shadow: 0 0 28px rgba(0, 230, 118, 0.28);
+    }
+
+    h1, h2, p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+      font-size: 28px;
+      letter-spacing: -1px;
+    }
+
+    h1 span {
+      color: var(--green);
+    }
+
+    .brand p,
+    .form-subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    h2 {
+      margin-bottom: 5px;
+      font-size: 21px;
+    }
+
+    .form-subtitle {
+      margin-bottom: 18px;
+    }
+
+    /* CORREÇÃO: display none/block controlado corretamente */
+    .form-view {
+      display: none;
+    }
+
+    .form-view.active-view {
+      display: block;
+      animation: show-form 0.35s ease forwards;
+    }
+
+    @keyframes show-form {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      margin-top: 5px;
+      color: #d8dfdc;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #35403d;
+      border-radius: 10px;
+      outline: none;
+      background: var(--input);
+      color: var(--white);
+      font-size: 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      /* CORREÇÃO: evita zoom no iOS/Android ao focar no input */
+      -webkit-appearance: none;
+    }
+
+    input::placeholder {
+      color: #77827d;
+    }
+
+    input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.14);
+    }
+
+    .primary-button {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--green);
+      color: #06120b;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 800;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+      /* CORREÇÃO: garante que o botão é clicável no celular */
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .primary-button:active {
+      background: #42f99a;
+      transform: scale(0.97);
+    }
+
+    .switch-text {
+      margin: 18px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    /* CORREÇÃO: botão de trocar tela com área de toque maior */
+    .link-button {
+      padding: 8px 4px;
+      border: 0;
+      background: transparent;
+      color: var(--green);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      /* Área de toque maior no celular */
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .link-button:active {
+      opacity: 0.7;
+    }
+
+    .message {
+      min-height: 20px;
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .message.error {
+      color: var(--danger);
+    }
+
+    .message.success {
+      color: var(--success);
+    }
+
+    /* Telas bem pequenas */
+    @media (max-width: 380px) {
+      .auth-page {
+        padding: 20px 10px;
+      }
+
+      .auth-card {
+        padding: 22px 16px;
+        border-radius: 16px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card">
+      <div class="brand">
+        <div class="brand-mark">D</div>
+        <h1>Desk<span>Flix</span></h1>
+        <p>Filmes, séries e diversão.</p>
+      </div>
+
+      <p id="message" class="message" aria-live="polite"></p>
+
+      <!-- TELA DE LOGIN -->
+      <div id="login-view" class="form-view active-view">
+        <h2>Bem-vindo de volta</h2>
+        <p class="form-subtitle">Entre para continuar assistindo.</p>
+
+        <form id="login-form">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" placeholder="voce@email.com" autocomplete="email">
+
+          <label for="login-password">Senha</label>
+          <input id="login-password" type="password" placeholder="Digite sua senha" autocomplete="current-password">
+
+          <button type="submit" class="primary-button">Entrar</button>
+        </form>
+
+        <p class="switch-text">
+          Ainda não tem conta?
+          <button type="button" id="show-register" class="link-button">Cadastre-se</button>
+        </p>
+      </div>
+
+      <!-- TELA DE CADASTRO -->
+      <div id="register-view" class="form-view">
+        <h2>Criar sua conta</h2>
+        <p class="form-subtitle">Comece sua experiência no DeskFlix.</p>
+
+        <form id="register-form">
+          <label for="register-email">Email</label>
+          <input id="register-email" type="email" placeholder="voce@email.com" autocomplete="email">
+
+          <label for="register-password">Senha</label>
+          <input id="register-password" type="password" placeholder="Crie uma senha" autocomplete="new-password">
+
+          <label for="register-confirm-password">Confirmar senha</label>
+          <input id="register-confirm-password" type="password" placeholder="Digite novamente" autocomplete="new-password">
+
+          <button type="submit" class="primary-button">Cadastrar</button>
+        </form>
+
+        <p class="switch-text">
+          Já tem uma conta?
+          <button type="button" id="show-login" class="link-button">Fazer login</button>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    // SUBSTITUA pelos dados do seu Firebase Console.
+ const firebaseConfig = {
+    apiKey: "AIzaSyCxKg_LAtZD3rLc1k6vN6lXqyD8xFxBlxs",
+    authDomain: "deskflix.firebaseapp.com",
+    projectId: "deskflix",
+    storageBucket: "deskflix.firebasestorage.app",
+    messagingSenderId: "980973660923",
+    appId: "1:980973660923:web:3e924c55de070705379e5e",
+    measurementId: "G-NHFK7NBDJD"
+  };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Elementos da tela
+    const loginView = document.getElementById("login-view");
+    const registerView = document.getElementById("register-view");
+    const loginForm = document.getElementById("login-form");
+    const registerForm = document.getElementById("register-form");
+    const msgEl = document.getElementById("message");
+    const btnShowRegister = document.getElementById("show-register");
+    const btnShowLogin = document.getElementById("show-login");
+
+    function showMessage(text, type = "error") {
+      msgEl.textContent = text;
+      msgEl.className = "message " + type;
+    }
+
+    function clearMessage() {
+      msgEl.textContent = "";
+      msgEl.className = "message";
+    }
+
+    function friendlyError(error) {
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          return "Este email já tem conta. Tente fazer login.";
+        case "auth/invalid-email":
+          return "Email inválido. Confira a digitação.";
+        case "auth/weak-password":
+          return "Senha fraca. Use pelo menos 6 caracteres.";
+        case "auth/invalid-credential":
+        case "auth/wrong-password":
+        case "auth/user-not-found":
+          return "Email ou senha incorretos.";
+        case "auth/too-many-requests":
+          return "Muitas tentativas. Espere um pouco.";
+        case "auth/operation-not-allowed":
+          return "Ative Email/Password no Firebase.";
+        default:
+          return "Erro inesperado. Confira os dados.";
+      }
+    }
+
+    // ===== CORREÇÃO PRINCIPAL: botão de trocar tela =====
+    // Usando função separada pra garantir que funciona no celular
+    function irParaCadastro() {
+      clearMessage();
+      loginView.classList.remove("active-view");
+      // Pequeno delay pra animação funcionar
+      setTimeout(function() {
+        registerView.classList.add("active-view");
+      }, 50);
+      // Rola pro topo pra não ficar cortado
+      window.scrollTo(0, 0);
+    }
+
+    function irParaLogin() {
+      clearMessage();
+      registerView.classList.remove("active-view");
+      setTimeout(function() {
+        loginView.classList.add("active-view");
+      }, 50);
+      window.scrollTo(0, 0);
+    }
+
+    // Evento de clique E toque (garante funcionar no celular)
+    btnShowRegister.addEventListener("click", irParaCadastro);
+    btnShowLogin.addEventListener("click", irParaLogin);
+
+    // Cadastro
+    registerForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const email = document.getElementById("register-email").value.trim();
+      const password = document.getElementById("register-password").value;
+      const confirmPassword = document.getElementById("register-confirm-password").value;
+
+      if (!email || !password || !confirmPassword) {
+        showMessage("Preencha todos os campos.");
+        return;
+      }
+
+      if (!email.includes("@") || !email.includes(".")) {
+        showMessage("Digite um email válido.");
+        return;
+      }
+
+      if (password.length < 6) {
+        showMessage("Senha precisa ter 6+ caracteres.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage("As senhas não coincidem.");
+        return;
+      }
+
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        registerForm.reset();
+        showMessage("Conta criada! Redirecionando...", "success");
+        // Redireciona pra home após 1 segundo
+        setTimeout(function() { window.location.href = "home.html"; }, 1000);
+      } catch (error) {
+        showMessage(friendlyError(error));
+      }
+    });
+
+    // Login
+    loginForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const email = document.getElementById("login-email").value.trim();
+      const password = document.getElementById("login-password").value;
+
+      if (!email || !password) {
+        showMessage("Digite email e senha.");
+        return;
+      }
+
+      if (!email.includes("@") || !email.includes(".")) {
+        showMessage("Email inválido.");
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        loginForm.reset();
+        showMessage("Login feito! Redirecionando...", "success");
+        // Redireciona pra home após 1 segundo
+        setTimeout(function() { window.location.href = "home.html"; }, 1000);
+      } catch (error) {
+        showMessage(friendlyError(error));
+      }
+    });
+  </script>
+</body>
+</html>
