@@ -173,6 +173,14 @@
 
     // Lista de filmes carregados do Firestore
     let filmes = [];
+    // Cargo do usuário logado (pra filtrar conteúdo)
+    let userRole = "none";
+
+    // Hierarquia de cargos: quanto maior o número, mais acesso tem
+    const ROLE_LEVEL = { none: 0, basic: 1, prime: 2, revendedor: 3, dono: 4 };
+    function temAcesso(minRole) {
+      return (ROLE_LEVEL[userRole] || 0) >= (ROLE_LEVEL[minRole] || 0);
+    }
 
     /* Elementos usados várias vezes */
     const $ = id => document.getElementById(id);
@@ -183,6 +191,7 @@
     async function carregarFilmes() {
       try {
         const snap = await db.collection("content").get();
+        // Carrega todos e filtra pelo cargo do usuário
         filmes = snap.docs.map(doc => {
           const d = doc.data();
           return {
@@ -195,9 +204,10 @@
             description: d.description || "",
             rating: d.rating || "N/A",
             season: d.season || null,
-            episode: d.episode || null
+            episode: d.episode || null,
+            minRole: d.minRole || "none"
           };
-        });
+        }).filter(f => temAcesso(f.minRole));
       } catch(e) {
         console.error("Erro ao carregar filmes do Firestore:", e);
         mostrarToast("Erro ao carregar filmes: " + (e.message || e));
@@ -398,7 +408,7 @@
     auth.onAuthStateChanged(async function(user) {
       if(user) {
         $("accountEmail").textContent = user.email || "Minha conta";
-        // Registra o usuário no Firestore se ainda não existir (pra aparecer no painel do dono)
+        // Busca o cargo do usuário no Firestore
         try {
           const userRef = db.collection("users").doc(user.uid);
           const userSnap = await userRef.get();
@@ -410,9 +420,16 @@
               subscriptionEnd: null,
               createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
+            userRole = "none";
+          } else {
+            userRole = userSnap.data().role || "none";
           }
-        } catch(e) { console.warn("Erro ao registrar usuário no Firestore:", e); }
-        // Carrega os filmes do Firestore
+        } catch(e) {
+          console.warn("Erro ao buscar cargo do usuário:", e);
+          // Se for o dono pelo email, dá acesso total
+          if(user.email === "kayronyuriemiguel@gmail.com") userRole = "dono";
+        }
+        // Carrega os filmes filtrados pelo cargo
         carregarFilmes();
       } else {
         // Não logado: volta pro login
