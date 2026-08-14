@@ -5,437 +5,3143 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#080a0a" />
   <title>DeskFlix | Início</title>
+
   <style>
-    /* ===== RESET E VARIÁVEIS ===== */
-    :root { --verde:#00e676; --verde-escuro:#00a854; --preto:#080a0a; --cinza:#121616; --cinza-2:#1b2020; --texto:#f5f7f6; --muted:#9aa5a0; }
-    * { box-sizing:border-box; margin:0; padding:0; }
-    html { scroll-behavior:smooth; }
-    body { background:var(--preto); color:var(--texto); font-family:Arial,Helvetica,sans-serif; min-height:100vh; overflow-x:hidden; }
-    button, input { font:inherit; }
-    button { cursor:pointer; border:0; }
-    .hidden { display:none !important; }
+    /* =========================================================
+       RESET E VARIÁVEIS
+    ========================================================= */
 
-    /* ===== BARRA SUPERIOR ===== */
-    .topbar { position:fixed; z-index:20; top:0; left:0; right:0; height:68px; display:grid; grid-template-columns:auto 1fr auto; gap:20px; align-items:center; padding:0 28px; background:rgba(8,10,10,.9); backdrop-filter:blur(18px); border-bottom:1px solid rgba(255,255,255,.07); }
-    .brand { color:var(--verde); font-size:1.15rem; font-weight:900; letter-spacing:-.5px; display:none; }
-    .sell-btn, .account-btn { color:var(--texto); background:var(--cinza-2); border:1px solid rgba(255,255,255,.09); border-radius:10px; padding:10px 15px; transition:.2s; }
-    .sell-btn:hover, .account-btn:hover { border-color:var(--verde); color:var(--verde); transform:translateY(-1px); }
-    .categories { min-width:0; display:flex; gap:8px; justify-content:center; overflow-x:auto; scrollbar-width:none; }
-    .categories::-webkit-scrollbar, .movie-row::-webkit-scrollbar { display:none; }
-    .category { white-space:nowrap; color:var(--muted); background:transparent; border-radius:20px; padding:9px 13px; transition:.2s; }
-    .category:hover, .category.active { color:#04140b; background:var(--verde); font-weight:700; }
-    .account-btn { display:flex; align-items:center; gap:8px; max-width:210px; }
-    .account-icon { font-size:1.1rem; }
-    #accountEmail { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    :root {
+      --verde: #00e676;
+      --verde-escuro: #00a854;
+      --preto: #080a0a;
+      --cinza: #121616;
+      --cinza-2: #1b2020;
+      --texto: #f5f7f6;
+      --muted: #9aa5a0;
+    }
 
-    /* ===== CONTEÚDO PRINCIPAL ===== */
-    main { padding:68px 0 90px; }
-    .hero { min-height:470px; display:flex; align-items:end; padding:70px 7%; position:relative; isolation:isolate; }
-    .hero-bg { position:absolute; inset:0; z-index:-1; background-size:cover; background-position:center; }
-    .hero-bg::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(8,10,10,1) 0%,rgba(8,10,10,.78) 38%,rgba(8,10,10,.12) 100%), linear-gradient(0deg,var(--preto),transparent 38%); }
-    .hero-content { max-width:570px; }
-    .eyebrow { color:var(--verde); font-weight:700; text-transform:uppercase; letter-spacing:2px; font-size:.78rem; margin-bottom:13px; }
-    .hero h1 { font-size:clamp(2.1rem,6vw,4.2rem); line-height:1; margin-bottom:15px; }
-    .hero p { color:#d1d8d4; line-height:1.55; margin-bottom:23px; max-width:520px; }
-    .primary-btn { background:var(--verde); color:#001b0b; font-weight:800; border-radius:9px; padding:13px 22px; transition:.2s; }
-    .primary-btn:hover { background:#55f99c; transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,230,118,.25); }
-    .section { padding:22px 5% 0; }
-    .section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:13px; }
-    .section h2 { font-size:1.25rem; }
-    .section-note { color:var(--muted); font-size:.8rem; }
-    .movie-row { display:flex; gap:14px; overflow-x:auto; padding:2px 0 12px; scrollbar-width:none; }
-    .movie-card { flex:0 0 155px; background:var(--cinza); border-radius:10px; overflow:hidden; position:relative; transition:.25s; box-shadow:0 5px 18px rgba(0,0,0,.25); }
-    .movie-card:hover { transform:translateY(-6px) scale(1.02); box-shadow:0 12px 27px rgba(0,230,118,.12); }
-    .poster { width:100%; aspect-ratio:2/3; object-fit:cover; display:block; background:var(--cinza-2); }
-    .card-info { padding:10px; }
-    .card-title { font-size:.9rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .rating { color:var(--verde); font-size:.78rem; margin-top:6px; }
-    .search-panel { padding:20px 5% 0; }
-    .search-box { display:flex; gap:10px; max-width:700px; }
-    .search-box input { flex:1; min-width:0; background:var(--cinza-2); color:white; border:1px solid #303a35; outline:none; border-radius:9px; padding:13px 15px; }
-    .search-box input:focus { border-color:var(--verde); box-shadow:0 0 0 3px rgba(0,230,118,.12); }
-    .status { color:var(--muted); font-size:.9rem; padding:18px 0; }
-    .empty-state { text-align:center; padding:80px 20px; color:var(--muted); }
-    .empty-state h2 { color:var(--verde); margin-bottom:10px; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    /* ===== BARRA INFERIOR ===== */
-    .bottom-nav { position:fixed; z-index:20; bottom:12px; left:50%; transform:translateX(-50%); width:min(94%,550px); display:grid; grid-template-columns:repeat(4,1fr); padding:8px; background:rgba(24,30,28,.8); backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,.1); border-radius:18px; box-shadow:0 8px 35px rgba(0,0,0,.45); }
-    .nav-item { color:var(--muted); background:transparent; padding:7px 4px; border-radius:12px; display:flex; flex-direction:column; gap:3px; align-items:center; font-size:.72rem; transition:.2s; }
-    .nav-icon { font-size:1.15rem; line-height:1; }
-    .nav-item:hover, .nav-item.active { color:var(--verde); background:rgba(0,230,118,.1); }
+    html {
+      scroll-behavior: smooth;
+    }
 
-    /* ===== MODAL DO PLAYER ===== */
-    .modal { position:fixed; inset:0; z-index:50; background:rgba(0,0,0,.82); display:grid; place-items:center; padding:20px; backdrop-filter:blur(8px); }
-    .player-box { width:min(900px,100%); max-height:92vh; overflow:auto; background:#111616; border:1px solid #2b3932; border-radius:17px; box-shadow:0 20px 70px rgba(0,0,0,.7); }
-    .player-header { display:flex; justify-content:space-between; align-items:center; padding:15px 18px; }
-    .close-btn { color:white; background:#26302b; width:34px; height:34px; border-radius:50%; font-size:1.25rem; }
-    .close-btn:hover { color:var(--verde); }
-    .video-wrap { background:#000; aspect-ratio:16/9; }
-    video, iframe.player-iframe { width:100%; height:100%; display:block; border:0; }
-    .player-details { padding:18px; }
-    .player-details h2 { margin-bottom:8px; }
-    .player-details p { color:#bac4be; line-height:1.5; margin-bottom:15px; }
-    .episode-selector { margin-top:10px; }
-    .episode-header { margin-bottom:10px; }
-    .season-select { background:var(--cinza-2); color:var(--texto); border:1px solid #303a35; border-radius:8px; padding:10px 14px; font-size:.9rem; outline:none; }
-    .season-select:focus { border-color:var(--verde); }
-    .episode-list { display:grid; grid-template-columns:repeat(auto-fill, minmax(110px, 1fr)); gap:8px; max-height:200px; overflow-y:auto; }
-    .episode-btn { background:var(--cinza-2); color:var(--texto); border:1px solid #303a35; border-radius:8px; padding:10px 8px; font-size:.82rem; font-weight:700; transition:.2s; text-align:center; }
-    .episode-btn:hover, .episode-btn.active { background:var(--verde); color:#001b0b; border-color:var(--verde); }
-    .episode-btn.active { box-shadow:0 0 12px rgba(0,230,118,.3); }
+    body {
+      background: var(--preto);
+      color: var(--texto);
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-    .toast { position:fixed; z-index:80; left:50%; bottom:100px; transform:translateX(-50%); background:#243229; color:#eafff1; border:1px solid var(--verde); border-radius:8px; padding:12px 16px; box-shadow:0 8px 25px #0008; }
-    @media (min-width:700px) { .brand { display:block; } .movie-card { flex-basis:180px; } }
-    @media (max-width:600px) { .topbar { height:60px; grid-template-columns:auto 1fr auto; gap:8px; padding:0 10px; } .sell-btn,.account-btn { padding:9px 10px; font-size:.78rem; } .account-btn { max-width:42px; } #accountEmail { display:none; } main { padding-top:60px; } .hero { min-height:350px; padding:45px 6%; } .hero p { font-size:.92rem; } .section { padding-left:4%; padding-right:4%; } .movie-card { flex-basis:140px; } }
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+
+    /* =========================================================
+       BARRA SUPERIOR
+    ========================================================= */
+
+    .topbar {
+      position: fixed;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      right: 0;
+
+      height: 68px;
+
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+
+      gap: 20px;
+      align-items: center;
+
+      padding: 0 28px;
+
+      background: rgba(8, 10, 10, .9);
+      backdrop-filter: blur(18px);
+
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
+    }
+
+    .brand {
+      color: var(--verde);
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: -.5px;
+      display: none;
+    }
+
+    .sell-btn,
+    .account-btn {
+      color: var(--texto);
+      background: var(--cinza-2);
+
+      border: 1px solid rgba(255, 255, 255, .09);
+      border-radius: 10px;
+
+      padding: 10px 15px;
+
+      transition: .2s;
+    }
+
+    .sell-btn:hover,
+    .account-btn:hover {
+      border-color: var(--verde);
+      color: var(--verde);
+      transform: translateY(-1px);
+    }
+
+    .categories {
+      min-width: 0;
+
+      display: flex;
+      gap: 8px;
+
+      justify-content: center;
+
+      overflow-x: auto;
+
+      scrollbar-width: none;
+    }
+
+    .categories::-webkit-scrollbar,
+    .movie-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category {
+      white-space: nowrap;
+
+      color: var(--muted);
+      background: transparent;
+
+      border-radius: 20px;
+
+      padding: 9px 13px;
+
+      transition: .2s;
+    }
+
+    .category:hover,
+    .category.active {
+      color: #04140b;
+      background: var(--verde);
+      font-weight: 700;
+    }
+
+    .account-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      max-width: 210px;
+    }
+
+    .account-icon {
+      font-size: 1.1rem;
+    }
+
+    #accountEmail {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+
+    /* =========================================================
+       CONTEÚDO PRINCIPAL
+    ========================================================= */
+
+    main {
+      padding: 68px 0 90px;
+    }
+
+    .hero {
+      min-height: 470px;
+
+      display: flex;
+      align-items: end;
+
+      padding: 70px 7%;
+
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+
+      z-index: -1;
+
+      background-size: cover;
+      background-position: center;
+
+      background-repeat: no-repeat;
+    }
+
+    .hero-bg::after {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(8,10,10,1) 0%,
+          rgba(8,10,10,.78) 38%,
+          rgba(8,10,10,.12) 100%
+        ),
+        linear-gradient(
+          0deg,
+          var(--preto),
+          transparent 38%
+        );
+    }
+
+    .hero-content {
+      max-width: 570px;
+    }
+
+    .eyebrow {
+      color: var(--verde);
+
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+
+      font-size: .78rem;
+
+      margin-bottom: 13px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.1rem, 6vw, 4.2rem);
+      line-height: 1;
+
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      color: #d1d8d4;
+
+      line-height: 1.55;
+
+      margin-bottom: 23px;
+
+      max-width: 520px;
+    }
+
+    .primary-btn {
+      background: var(--verde);
+      color: #001b0b;
+
+      font-weight: 800;
+
+      border-radius: 9px;
+
+      padding: 13px 22px;
+
+      transition: .2s;
+    }
+
+    .primary-btn:hover {
+      background: #55f99c;
+
+      transform: translateY(-2px);
+
+      box-shadow: 0 8px 24px rgba(0,230,118,.25);
+    }
+
+
+    /* =========================================================
+       CATÁLOGO
+    ========================================================= */
+
+    .section {
+      padding: 22px 5% 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 13px;
+    }
+
+    .section h2 {
+      font-size: 1.25rem;
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .movie-row {
+      display: flex;
+      gap: 14px;
+
+      overflow-x: auto;
+
+      padding: 2px 0 12px;
+
+      scrollbar-width: none;
+    }
+
+    .movie-card {
+      flex: 0 0 155px;
+
+      background: var(--cinza);
+
+      border-radius: 10px;
+
+      overflow: hidden;
+
+      position: relative;
+
+      transition: .25s;
+
+      box-shadow: 0 5px 18px rgba(0,0,0,.25);
+    }
+
+    .movie-card:hover {
+      transform: translateY(-6px) scale(1.02);
+
+      box-shadow:
+        0 12px 27px rgba(0,230,118,.12);
+    }
+
+    .poster {
+      width: 100%;
+
+      aspect-ratio: 2/3;
+
+      object-fit: cover;
+
+      display: block;
+
+      background: var(--cinza-2);
+    }
+
+    .card-info {
+      padding: 10px;
+    }
+
+    .card-title {
+      font-size: .9rem;
+
+      font-weight: 700;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+
+    .rating {
+      color: var(--verde);
+
+      font-size: .78rem;
+
+      margin-top: 6px;
+    }
+
+
+    /* =========================================================
+       BUSCA
+    ========================================================= */
+
+    .search-panel {
+      padding: 20px 5% 0;
+    }
+
+    .search-box {
+      display: flex;
+
+      gap: 10px;
+
+      max-width: 700px;
+    }
+
+    .search-box input {
+      flex: 1;
+
+      min-width: 0;
+
+      background: var(--cinza-2);
+
+      color: white;
+
+      border: 1px solid #303a35;
+
+      outline: none;
+
+      border-radius: 9px;
+
+      padding: 13px 15px;
+    }
+
+    .search-box input:focus {
+      border-color: var(--verde);
+
+      box-shadow:
+        0 0 0 3px rgba(0,230,118,.12);
+    }
+
+    .status {
+      color: var(--muted);
+
+      font-size: .9rem;
+
+      padding: 18px 0;
+    }
+
+    .empty-state {
+      text-align: center;
+
+      padding: 80px 20px;
+
+      color: var(--muted);
+    }
+
+    .empty-state h2 {
+      color: var(--verde);
+
+      margin-bottom: 10px;
+    }
+
+
+    /* =========================================================
+       BARRA INFERIOR
+    ========================================================= */
+
+    .bottom-nav {
+      position: fixed;
+
+      z-index: 20;
+
+      bottom: 12px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      width: min(94%,550px);
+
+      display: grid;
+
+      grid-template-columns: repeat(4,1fr);
+
+      padding: 8px;
+
+      background: rgba(24,30,28,.8);
+
+      backdrop-filter: blur(18px);
+
+      border: 1px solid rgba(255,255,255,.1);
+
+      border-radius: 18px;
+
+      box-shadow: 0 8px 35px rgba(0,0,0,.45);
+    }
+
+    .nav-item {
+      color: var(--muted);
+
+      background: transparent;
+
+      padding: 7px 4px;
+
+      border-radius: 12px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 3px;
+
+      align-items: center;
+
+      font-size: .72rem;
+
+      transition: .2s;
+    }
+
+    .nav-icon {
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      color: var(--verde);
+
+      background: rgba(0,230,118,.1);
+    }
+
+
+    /* =========================================================
+       MODAL DO PLAYER
+    ========================================================= */
+
+    .modal {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 50;
+
+      background: rgba(0,0,0,.82);
+
+      display: grid;
+
+      place-items: center;
+
+      padding: 20px;
+
+      backdrop-filter: blur(8px);
+    }
+
+    .player-box {
+      width: min(900px,100%);
+
+      max-height: 92vh;
+
+      overflow: auto;
+
+      background: #111616;
+
+      border: 1px solid #2b3932;
+
+      border-radius: 17px;
+
+      box-shadow:
+        0 20px 70px rgba(0,0,0,.7);
+    }
+
+    .player-header {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      padding: 15px 18px;
+    }
+
+    .close-btn {
+      color: white;
+
+      background: #26302b;
+
+      width: 34px;
+
+      height: 34px;
+
+      border-radius: 50%;
+
+      font-size: 1.25rem;
+    }
+
+    .close-btn:hover {
+      color: var(--verde);
+    }
+
+    /*
+      IMPORTANTE:
+
+      O player mantém proporção 16:9.
+      Isso permite iframe, vídeo MP4, M3U8 etc.
+    */
+
+    .video-wrap {
+      background: #000;
+
+      aspect-ratio: 16/9;
+
+      position: relative;
+
+      overflow: hidden;
+    }
+
+    video,
+    iframe.player-iframe {
+      width: 100%;
+
+      height: 100%;
+
+      display: block;
+
+      border: 0;
+
+      background: #000;
+    }
+
+    .player-loading {
+      width: 100%;
+      height: 100%;
+
+      display: grid;
+      place-items: center;
+
+      color: var(--muted);
+
+      background: #000;
+    }
+
+    .player-error {
+      width: 100%;
+      height: 100%;
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: center;
+
+      align-items: center;
+
+      text-align: center;
+
+      gap: 10px;
+
+      padding: 25px;
+
+      color: var(--muted);
+
+      background: #000;
+    }
+
+    .player-error strong {
+      color: var(--verde);
+
+      font-size: 1.1rem;
+    }
+
+    .player-error small {
+      max-width: 600px;
+
+      word-break: break-word;
+
+      color: #737d78;
+    }
+
+
+    /* =========================================================
+       DETALHES DO PLAYER
+    ========================================================= */
+
+    .player-details {
+      padding: 18px;
+    }
+
+    .player-details h2 {
+      margin-bottom: 8px;
+    }
+
+    .player-details p {
+      color: #bac4be;
+
+      line-height: 1.5;
+
+      margin-bottom: 15px;
+    }
+
+
+    /* =========================================================
+       SÉRIES / EPISÓDIOS
+    ========================================================= */
+
+    .episode-selector {
+      margin-top: 10px;
+    }
+
+    .episode-header {
+      margin-bottom: 10px;
+    }
+
+    .season-select {
+      background: var(--cinza-2);
+
+      color: var(--texto);
+
+      border: 1px solid #303a35;
+
+      border-radius: 8px;
+
+      padding: 10px 14px;
+
+      font-size: .9rem;
+
+      outline: none;
+    }
+
+    .season-select:focus {
+      border-color: var(--verde);
+    }
+
+    .episode-list {
+      display: grid;
+
+      grid-template-columns:
+        repeat(auto-fill,minmax(110px,1fr));
+
+      gap: 8px;
+
+      max-height: 200px;
+
+      overflow-y: auto;
+    }
+
+    .episode-btn {
+      background: var(--cinza-2);
+
+      color: var(--texto);
+
+      border: 1px solid #303a35;
+
+      border-radius: 8px;
+
+      padding: 10px 8px;
+
+      font-size: .82rem;
+
+      font-weight: 700;
+
+      transition: .2s;
+
+      text-align: center;
+    }
+
+    .episode-btn:hover,
+    .episode-btn.active {
+      background: var(--verde);
+
+      color: #001b0b;
+
+      border-color: var(--verde);
+    }
+
+    .episode-btn.active {
+      box-shadow:
+        0 0 12px rgba(0,230,118,.3);
+    }
+
+
+    /* =========================================================
+       TOAST
+    ========================================================= */
+
+    .toast {
+      position: fixed;
+
+      z-index: 80;
+
+      left: 50%;
+
+      bottom: 100px;
+
+      transform: translateX(-50%);
+
+      background: #243229;
+
+      color: #eafff1;
+
+      border: 1px solid var(--verde);
+
+      border-radius: 8px;
+
+      padding: 12px 16px;
+
+      box-shadow: 0 8px 25px #0008;
+
+      max-width: 90%;
+
+      text-align: center;
+    }
+
+
+    /* =========================================================
+       RESPONSIVO
+    ========================================================= */
+
+    @media (min-width:700px) {
+
+      .brand {
+        display: block;
+      }
+
+      .movie-card {
+        flex-basis: 180px;
+      }
+
+    }
+
+    @media (max-width:600px) {
+
+      .topbar {
+        height: 60px;
+
+        grid-template-columns:
+          auto 1fr auto;
+
+        gap: 8px;
+
+        padding: 0 10px;
+      }
+
+      .sell-btn,
+      .account-btn {
+        padding: 9px 10px;
+
+        font-size: .78rem;
+      }
+
+      .account-btn {
+        max-width: 42px;
+      }
+
+      #accountEmail {
+        display: none;
+      }
+
+      main {
+        padding-top: 60px;
+      }
+
+      .hero {
+        min-height: 350px;
+
+        padding: 45px 6%;
+      }
+
+      .hero p {
+        font-size: .92rem;
+      }
+
+      .section {
+        padding-left: 4%;
+        padding-right: 4%;
+      }
+
+      .movie-card {
+        flex-basis: 140px;
+      }
+
+      .modal {
+        padding: 8px;
+      }
+
+      .player-box {
+        max-height: 96vh;
+
+        border-radius: 12px;
+      }
+
+    }
+
   </style>
 </head>
+
+
 <body>
-  <!-- Barra fixa do topo -->
+
+
+  <!-- =========================================================
+       BARRA FIXA DO TOPO
+  ========================================================= -->
+
   <header class="topbar">
-    <button class="sell-btn" id="resaleBtn">Revenda</button>
-    <div class="brand">DeskFlix</div>
-    <nav class="categories" aria-label="Categorias">
-      <button class="category active" data-category="Todos">Todos</button>
-      <button class="category" data-category="Ação">Ação</button>
-      <button class="category" data-category="Comédia">Comédia</button>
-      <button class="category" data-category="Terror">Terror</button>
-      <button class="category" data-category="Romance">Romance</button>
-      <button class="category" data-category="Ficção">Ficção</button>
-      <button class="category" data-category="Documentário">Documentário</button>
-      <button class="category" data-category="Série">Série</button>
+
+    <button
+      class="sell-btn"
+      id="resaleBtn">
+      Revenda
+    </button>
+
+    <div class="brand">
+      DeskFlix
+    </div>
+
+    <nav
+      class="categories"
+      aria-label="Categorias">
+
+      <button
+        class="category active"
+        data-category="Todos">
+        Todos
+      </button>
+
+      <button
+        class="category"
+        data-category="Ação">
+        Ação
+      </button>
+
+      <button
+        class="category"
+        data-category="Comédia">
+        Comédia
+      </button>
+
+      <button
+        class="category"
+        data-category="Terror">
+        Terror
+      </button>
+
+      <button
+        class="category"
+        data-category="Romance">
+        Romance
+      </button>
+
+      <button
+        class="category"
+        data-category="Ficção">
+        Ficção
+      </button>
+
+      <button
+        class="category"
+        data-category="Documentário">
+        Documentário
+      </button>
+
+      <button
+        class="category"
+        data-category="Série">
+        Série
+      </button>
+
     </nav>
-    <button class="account-btn" id="accountBtn" title="Conta do usuário"><span class="account-icon">◉</span><span id="accountEmail">Carregando...</span></button>
+
+    <button
+      class="account-btn"
+      id="accountBtn"
+      title="Conta do usuário">
+
+      <span class="account-icon">
+        ◉
+      </span>
+
+      <span id="accountEmail">
+        Carregando...
+      </span>
+
+    </button>
+
   </header>
 
+
+
+  <!-- =========================================================
+       CONTEÚDO
+  ========================================================= -->
+
   <main>
-    <!-- Busca -->
-    <section class="search-panel hidden" id="searchPanel">
-      <div class="search-box"><input id="searchInput" type="search" placeholder="Buscar filmes e séries..." /><button class="primary-btn" id="searchBtn">Buscar</button></div>
-      <div class="status" id="searchStatus">Digite um título para começar.</div>
-      <div class="movie-row" id="searchResults"></div>
-    </section>
 
-    <!-- Banner de destaque (preenchido pelo JS com o primeiro filme do Firestore) -->
-    <section class="hero" id="hero">
-      <div class="hero-bg" id="heroBg"></div>
-      <div class="hero-content">
-        <div class="eyebrow">Destaque</div>
-        <h1 id="heroTitle">DeskFlix</h1>
-        <p id="heroDescription">Adicione filmes e séries pelo painel de Revenda para vê-los aqui.</p>
-        <button class="primary-btn" id="heroWatch">▶ Assistir</button>
+
+    <!-- BUSCA -->
+
+    <section
+      class="search-panel hidden"
+      id="searchPanel">
+
+      <div class="search-box">
+
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Buscar filmes e séries..." />
+
+        <button
+          class="primary-btn"
+          id="searchBtn">
+          Buscar
+        </button>
+
       </div>
+
+      <div
+        class="status"
+        id="searchStatus">
+        Digite um título para começar.
+      </div>
+
+      <div
+        class="movie-row"
+        id="searchResults">
+      </div>
+
     </section>
 
-    <!-- Catálogo preenchido pelo JS com dados do Firestore -->
+
+
+    <!-- HERO -->
+
+    <section
+      class="hero"
+      id="hero">
+
+      <div
+        class="hero-bg"
+        id="heroBg">
+      </div>
+
+      <div class="hero-content">
+
+        <div class="eyebrow">
+          Destaque
+        </div>
+
+        <h1 id="heroTitle">
+          DeskFlix
+        </h1>
+
+        <p id="heroDescription">
+          Adicione filmes e séries pelo painel de Revenda para vê-los aqui.
+        </p>
+
+        <button
+          class="primary-btn"
+          id="heroWatch">
+          ▶ Assistir
+        </button>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- CATÁLOGO -->
+
     <div id="catalog"></div>
+
+
   </main>
 
-  <!-- Navegação inferior fixa -->
-  <nav class="bottom-nav" aria-label="Navegação principal">
-    <button class="nav-item active" data-nav="home"><span class="nav-icon">⌂</span>Home</button>
-    <button class="nav-item" data-nav="search"><span class="nav-icon">⌕</span>Buscar</button>
-    <button class="nav-item" data-nav="subscription"><span class="nav-icon">◆</span>Assinatura</button>
-    <button class="nav-item" data-nav="settings"><span class="nav-icon">⚙</span>Configuração</button>
+
+
+  <!-- =========================================================
+       NAVEGAÇÃO INFERIOR
+  ========================================================= -->
+
+  <nav
+    class="bottom-nav"
+    aria-label="Navegação principal">
+
+    <button
+      class="nav-item active"
+      data-nav="home">
+
+      <span class="nav-icon">
+        ⌂
+      </span>
+
+      Home
+
+    </button>
+
+    <button
+      class="nav-item"
+      data-nav="search">
+
+      <span class="nav-icon">
+        ⌕
+      </span>
+
+      Buscar
+
+    </button>
+
+    <button
+      class="nav-item"
+      data-nav="subscription">
+
+      <span class="nav-icon">
+        ◆
+      </span>
+
+      Assinatura
+
+    </button>
+
+    <button
+      class="nav-item"
+      data-nav="settings">
+
+      <span class="nav-icon">
+        ⚙
+      </span>
+
+      Configuração
+
+    </button>
+
   </nav>
 
-  <!-- Modal/tela do player -->
-  <div class="modal hidden" id="playerModal" role="dialog" aria-modal="true" aria-label="Player de vídeo">
+
+
+  <!-- =========================================================
+       MODAL DO PLAYER
+  ========================================================= -->
+
+  <div
+    class="modal hidden"
+    id="playerModal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Player de vídeo">
+
     <div class="player-box">
-      <div class="player-header"><strong id="playerHeaderTitle">Player DeskFlix</strong><button class="close-btn" id="closePlayer" aria-label="Fechar">×</button></div>
-      <div class="video-wrap" id="videoWrap">
-        <video id="videoPlayer" controls playsinline>Seu navegador não suporta vídeo HTML5.</video>
+
+
+      <div class="player-header">
+
+        <strong id="playerHeaderTitle">
+          Player DeskFlix
+        </strong>
+
+        <button
+          class="close-btn"
+          id="closePlayer"
+          aria-label="Fechar">
+
+          ×
+
+        </button>
+
       </div>
+
+
+
+      <!-- PLAYER -->
+
+      <div
+        class="video-wrap"
+        id="videoWrap">
+
+        <video
+          id="videoPlayer"
+          controls
+          playsinline>
+
+          Seu navegador não suporta vídeo HTML5.
+
+        </video>
+
+      </div>
+
+
+
+      <!-- DETALHES -->
+
       <div class="player-details">
-        <h2 id="playerTitle">Título</h2>
-        <p id="playerDescription">Descrição do filme.</p>
-        <!-- Seleção de episódios (só aparece pra séries) -->
-        <div id="episodeSelector" class="episode-selector hidden">
+
+        <h2 id="playerTitle">
+          Título
+        </h2>
+
+        <p id="playerDescription">
+          Descrição do filme.
+        </p>
+
+
+
+        <!-- SÉRIES -->
+
+        <div
+          id="episodeSelector"
+          class="episode-selector hidden">
+
           <div class="episode-header">
-            <select id="seasonSelect" class="season-select"></select>
+
+            <select
+              id="seasonSelect"
+              class="season-select">
+            </select>
+
           </div>
-          <div id="episodeList" class="episode-list"></div>
+
+          <div
+            id="episodeList"
+            class="episode-list">
+          </div>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
-  <div class="toast hidden" id="toast"></div>
 
-  <!-- Firebase: Auth + Firestore pra puxar os filmes adicionados pelo painel -->
+
+
+  <!-- TOAST -->
+
+  <div
+    class="toast hidden"
+    id="toast">
+  </div>
+
+
+
+  <!-- =========================================================
+       FIREBASE
+  ========================================================= -->
+
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script>
-    /* ===== CONFIGURAÇÕES ===== */
-    const firebaseConfig = { apiKey:"AIzaSyCxKg_LAtZD3rLc1k6vN6lXqyD8xFxBlxs", authDomain:"deskflix.firebaseapp.com", projectId:"deskflix", storageBucket:"deskflix.firebasestorage.app", messagingSenderId:"980973660923", appId:"1:980973660923:web:0df5c19920ef67c6379e5e", measurementId:"G-DDZWVG6L5D" };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
 
-    // Lista de filmes carregados do Firestore
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+
+
+  <script>
+
+    /* =========================================================
+       CONFIGURAÇÃO FIREBASE
+    ========================================================= */
+
+    const firebaseConfig = {
+
+      apiKey:
+        "AIzaSyCxKg_LAtZD3rLc1k6vN6lXqyD8xFxBlxs",
+
+      authDomain:
+        "deskflix.firebaseapp.com",
+
+      projectId:
+        "deskflix",
+
+      storageBucket:
+        "deskflix.firebasestorage.app",
+
+      messagingSenderId:
+        "980973660923",
+
+      appId:
+        "1:980973660923:web:0df5c19920ef67c6379e5e",
+
+      measurementId:
+        "G-DDZWVG6L5D"
+
+    };
+
+
+    firebase.initializeApp(firebaseConfig);
+
+
+    const auth =
+      firebase.auth();
+
+    const db =
+      firebase.firestore();
+
+
+
+    /* =========================================================
+       VARIÁVEIS
+    ========================================================= */
+
     let filmes = [];
-    // Cargo do usuário logado (pra filtrar conteúdo)
+
     let userRole = "none";
 
-    // Hierarquia de cargos: quanto maior o número, mais acesso tem
-    const ROLE_LEVEL = { none: 0, basic: 1, prime: 2, revendedor: 3, dono: 4 };
+
+    const ROLE_LEVEL = {
+
+      none: 0,
+
+      basic: 1,
+
+      prime: 2,
+
+      revendedor: 3,
+
+      dono: 4
+
+    };
+
+
     function temAcesso(minRole) {
-      return (ROLE_LEVEL[userRole] || 0) >= (ROLE_LEVEL[minRole] || 0);
+
+      return (
+        (ROLE_LEVEL[userRole] || 0) >=
+        (ROLE_LEVEL[minRole] || 0)
+      );
+
     }
 
-    /* Elementos usados várias vezes */
-    const $ = id => document.getElementById(id);
-    function esc(text) { return String(text || "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c])); }
-    function mostrarToast(msg) { $("toast").textContent=msg; $("toast").classList.remove("hidden"); setTimeout(() => $("toast").classList.add("hidden"), 2800); }
 
-    /* ===== CARREGAR FILMES DO FIRESTORE ===== */
+
+    /* =========================================================
+       UTILITÁRIOS
+    ========================================================= */
+
+    const $ = id =>
+      document.getElementById(id);
+
+
+    function esc(text) {
+
+      return String(text || "")
+        .replace(
+          /[&<>'"]/g,
+          c => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            "'": "&#39;",
+            "\"": "&quot;"
+          }[c])
+        );
+
+    }
+
+
+    function mostrarToast(msg) {
+
+      $("toast").textContent = msg;
+
+      $("toast").classList.remove("hidden");
+
+      clearTimeout(window.toastTimer);
+
+      window.toastTimer =
+        setTimeout(
+          () =>
+            $("toast").classList.add("hidden"),
+          2800
+        );
+
+    }
+
+
+
+    /* =========================================================
+       CARREGAR FILMES
+    ========================================================= */
+
     async function carregarFilmes() {
+
       try {
-        const snap = await db.collection("content").get();
-        // Carrega todos e filtra pelo cargo do usuário
-        filmes = snap.docs.map(doc => {
-          const d = doc.data();
-          return {
-            id: doc.id,
-            title: d.title || "Sem título",
-            category: d.category || "Outros",
-            type: d.type || "filme",
-            videoUrl: d.videoUrl || "",
-            poster: d.posterUrl || "",
-            description: d.description || "",
-            rating: d.rating || "N/A",
-            season: d.season || null,
-            episode: d.episode || null,
-            minRole: d.minRole || "none"
-          };
-        }).filter(f => temAcesso(f.minRole));
+
+        const snap =
+          await db
+            .collection("content")
+            .get();
+
+
+        filmes =
+          snap.docs
+            .map(doc => {
+
+              const d =
+                doc.data();
+
+              return {
+
+                id:
+                  doc.id,
+
+                title:
+                  d.title ||
+                  "Sem título",
+
+                category:
+                  d.category ||
+                  "Outros",
+
+                type:
+                  d.type ||
+                  "filme",
+
+                /*
+                  URL DO VÍDEO.
+
+                  Pode ser:
+
+                  MP4
+                  WEBM
+                  M3U8
+                  SuperFlixAPI
+                  iframe
+                  embed
+                  etc.
+                */
+
+                videoUrl:
+                  d.videoUrl ||
+                  "",
+
+                poster:
+                  d.posterUrl ||
+                  "",
+
+                description:
+                  d.description ||
+                  "",
+
+                rating:
+                  d.rating ||
+                  "N/A",
+
+                season:
+                  d.season ||
+                  null,
+
+                episode:
+                  d.episode ||
+                  null,
+
+                minRole:
+                  d.minRole ||
+                  "none"
+
+              };
+
+            })
+            .filter(
+              f =>
+                temAcesso(f.minRole)
+            );
+
+
       } catch(e) {
-        console.error("Erro ao carregar filmes do Firestore:", e);
-        mostrarToast("Erro ao carregar filmes: " + (e.message || e));
+
+        console.error(
+          "Erro ao carregar filmes:",
+          e
+        );
+
+        mostrarToast(
+          "Erro ao carregar filmes: " +
+          (e.message || e)
+        );
+
         filmes = [];
+
       }
+
+
+
+      /* =======================================================
+         HERO
+      ======================================================= */
 
       if(filmes.length > 0) {
-        // Atualiza o hero com o primeiro filme
-        const destaque = filmes[0];
-        $("heroTitle").textContent = destaque.title;
-        $("heroDescription").textContent = destaque.description || "Assista agora no DeskFlix.";
+
+        const destaque =
+          filmes[0];
+
+
+        $("heroTitle")
+          .textContent =
+          destaque.title;
+
+
+        $("heroDescription")
+          .textContent =
+          destaque.description ||
+          "Assista agora no DeskFlix.";
+
+
         if(destaque.poster) {
-          $("heroBg").style.backgroundImage = "url('" + destaque.poster + "')";
+
+          $("heroBg")
+            .style
+            .backgroundImage =
+            "url('" +
+            destaque.poster +
+            "')";
+
         }
+
+
         desenharCatalogo();
+
       } else {
-        $("catalog").innerHTML = '<div class="empty-state"><h2>Nenhum conteúdo ainda</h2><p>O dono precisa adicionar filmes e séries pelo painel de Revenda.</p></div>';
+
+        $("catalog").innerHTML =
+
+          '<div class="empty-state">' +
+
+          '<h2>Nenhum conteúdo ainda</h2>' +
+
+          '<p>' +
+          'O dono precisa adicionar filmes e séries pelo painel de Revenda.' +
+          '</p>' +
+
+          '</div>';
+
       }
+
     }
 
-    /* Cria cada card de filme */
+
+
+    /* =========================================================
+       CARD
+    ========================================================= */
+
     function cardHTML(filme) {
-      const poster = filme.poster || "https://placehold.co/500x750/18201c/00e676?text=DeskFlix";
-      return '<article class="movie-card" tabindex="0" data-id="' + filme.id + '"><img class="poster" loading="lazy" src="' + poster + '" alt="' + esc(filme.title) + '" onerror="this.src=\'https://placehold.co/500x750/18201c/00e676?text=DeskFlix\'"><div class="card-info"><div class="card-title">' + esc(filme.title) + '</div><div class="rating">★ ' + esc(filme.rating) + '</div></div></article>';
+
+      const poster =
+        filme.poster ||
+        "https://placehold.co/500x750/18201c/00e676?text=DeskFlix";
+
+
+      return (
+
+        '<article ' +
+
+        'class="movie-card" ' +
+
+        'tabindex="0" ' +
+
+        'data-id="' +
+        esc(filme.id) +
+        '">' +
+
+        '<img ' +
+
+        'class="poster" ' +
+
+        'loading="lazy" ' +
+
+        'src="' +
+        esc(poster) +
+        '" ' +
+
+        'alt="' +
+        esc(filme.title) +
+        '" ' +
+
+        'onerror="this.src=\'https://placehold.co/500x750/18201c/00e676?text=DeskFlix\'">' +
+
+        '<div class="card-info">' +
+
+        '<div class="card-title">' +
+        esc(filme.title) +
+        '</div>' +
+
+        '<div class="rating">' +
+
+        '★ ' +
+        esc(filme.rating) +
+
+        '</div>' +
+
+        '</div>' +
+
+        '</article>'
+
+      );
+
     }
+
+
+
+    /* =========================================================
+       DESENHAR CATÁLOGO
+    ========================================================= */
 
     function desenharCatalogo(lista) {
-      lista = lista || filmes;
-      // Agrupa por categoria
-      const categorias = [...new Set(lista.map(f => f.category))];
-      // Também agrupa por tipo (filme/serie)
-      const tipos = [...new Set(lista.map(f => f.type))];
+
+      lista =
+        lista || filmes;
+
+
+      const categorias =
+        [
+          ...new Set(
+            lista.map(
+              f => f.category
+            )
+          )
+        ];
+
 
       let html = "";
 
-      // Seção por categoria
+
       categorias.forEach(cat => {
-        const items = lista.filter(f => f.category === cat);
+
+        const items =
+          lista.filter(
+            f =>
+              f.category === cat
+          );
+
+
         if(items.length) {
-          html += '<section class="section"><div class="section-head"><h2>' + esc(cat) + '</h2><span class="section-note">Deslize para ver mais</span></div><div class="movie-row">' + items.map(cardHTML).join("") + '</div></section>';
+
+          html +=
+
+            '<section class="section">' +
+
+            '<div class="section-head">' +
+
+            '<h2>' +
+            esc(cat) +
+            '</h2>' +
+
+            '<span class="section-note">' +
+            'Deslize para ver mais' +
+            '</span>' +
+
+            '</div>' +
+
+            '<div class="movie-row">' +
+
+            items
+              .map(cardHTML)
+              .join("") +
+
+            '</div>' +
+
+            '</section>';
+
         }
+
       });
+
 
       if(!html) {
-        html = '<div class="empty-state"><h2>Nenhum resultado</h2><p>Tente outra categoria.</p></div>';
+
+        html =
+
+          '<div class="empty-state">' +
+
+          '<h2>Nenhum resultado</h2>' +
+
+          '<p>Tente outra categoria.</p>' +
+
+          '</div>';
+
       }
 
-      $("catalog").innerHTML = html;
 
-      // Adiciona evento de clique nos cards
-      document.querySelectorAll(".movie-card").forEach(card => {
-        card.addEventListener("click", function() {
-          const filme = filmes.find(f => f.id === card.dataset.id);
-          abrirPlayer(filme);
-        });
-        card.addEventListener("keydown", function(e) { if(e.key === "Enter") card.click(); });
-      });
+      $("catalog")
+        .innerHTML =
+        html;
+
+
+      adicionarEventosCards();
+
     }
 
-    /* ===== PLAYER ===== */
-    function abrirPlayer(filme) {
-      if(!filme) return;
-      $("playerHeaderTitle").textContent = "DeskFlix • " + filme.title;
-      $("playerTitle").textContent = filme.title;
-      $("playerDescription").textContent = filme.description || "Assista agora no DeskFlix.";
 
-      // Carrega o vídeo
-      carregarVideo(filme.videoUrl);
 
-      // Se for série, mostra seleção de episódios
-      const episodeSelector = $("episodeSelector");
-      if(filme.type === "serie") {
-        // Busca todos os episódios dessa série (mesmo título)
-        const episodios = filmes.filter(f => f.title === filme.title && f.type === "serie");
-        // Pega as temporadas disponíveis
-        const temporadas = [...new Set(episodios.map(e => e.season || 1))].sort((a,b) => a-b);
+    /* =========================================================
+       EVENTOS DOS CARDS
+    ========================================================= */
 
-        // Preenche o select de temporadas
-        const seasonSelect = $("seasonSelect");
-        seasonSelect.innerHTML = temporadas.map(t => '<option value="' + t + '">Temporada ' + t + '</option>').join("");
+    function adicionarEventosCards() {
 
-        // Função pra mostrar episódios da temporada selecionada
-        function mostrarEpisodios(temporada) {
-          const eps = episodios.filter(e => (e.season || 1) == temporada).sort((a,b) => (a.episode||1) - (b.episode||1));
-          const episodeList = $("episodeList");
-          episodeList.innerHTML = eps.map(ep => '<button class="episode-btn' + (ep.id === filme.id ? ' active' : '') + '" data-ep-id="' + ep.id + '">Ep ' + (ep.episode || 1) + '</button>').join("");
-          // Evento de clique nos episódios
-          episodeList.querySelectorAll(".episode-btn").forEach(btn => {
-            btn.addEventListener("click", function() {
-              const ep = filmes.find(f => f.id === btn.dataset.epId);
-              if(ep) {
-                carregarVideo(ep.videoUrl);
-                $("playerHeaderTitle").textContent = "DeskFlix • " + ep.title + " - T" + (ep.season||1) + "E" + (ep.episode||1);
-                // Marca o ativo
-                episodeList.querySelectorAll(".episode-btn").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
+      document
+        .querySelectorAll(".movie-card")
+        .forEach(card => {
+
+
+          card.addEventListener(
+            "click",
+            function() {
+
+              const filme =
+                filmes.find(
+                  f =>
+                    f.id ===
+                    card.dataset.id
+                );
+
+
+              abrirPlayer(filme);
+
+            }
+          );
+
+
+          card.addEventListener(
+            "keydown",
+            function(e) {
+
+              if(e.key === "Enter") {
+
+                card.click();
+
               }
+
+            }
+          );
+
+        });
+
+    }
+
+
+
+    /* =========================================================
+       PLAYER
+    ========================================================= */
+
+    function abrirPlayer(filme) {
+
+      if(!filme)
+        return;
+
+
+      $("playerHeaderTitle")
+        .textContent =
+        "DeskFlix • " +
+        filme.title;
+
+
+      $("playerTitle")
+        .textContent =
+        filme.title;
+
+
+      $("playerDescription")
+        .textContent =
+        filme.description ||
+        "Assista agora no DeskFlix.";
+
+
+      /*
+        CARREGA O LINK DO FILME
+      */
+
+      carregarVideo(
+        filme.videoUrl
+      );
+
+
+
+      /* =======================================================
+         SÉRIES
+      ======================================================= */
+
+      const episodeSelector =
+        $("episodeSelector");
+
+
+      if(
+        filme.type === "serie" ||
+        filme.type === "série"
+      ) {
+
+        const episodios =
+          filmes.filter(
+            f =>
+              f.title === filme.title &&
+              (
+                f.type === "serie" ||
+                f.type === "série"
+              )
+          );
+
+
+        const temporadas =
+          [
+            ...new Set(
+              episodios.map(
+                e =>
+                  Number(e.season) || 1
+              )
+            )
+          ]
+          .sort(
+            (a,b) =>
+              a - b
+          );
+
+
+        const seasonSelect =
+          $("seasonSelect");
+
+
+        seasonSelect.innerHTML =
+          temporadas
+            .map(
+              t =>
+                '<option value="' +
+                t +
+                '">' +
+                'Temporada ' +
+                t +
+                '</option>'
+            )
+            .join("");
+
+
+        function mostrarEpisodios(
+          temporada
+        ) {
+
+          const eps =
+            episodios
+              .filter(
+                e =>
+                  (
+                    Number(e.season) ||
+                    1
+                  ) ==
+                  Number(temporada)
+              )
+              .sort(
+                (a,b) =>
+                  (
+                    Number(a.episode) ||
+                    1
+                  ) -
+                  (
+                    Number(b.episode) ||
+                    1
+                  )
+              );
+
+
+          const episodeList =
+            $("episodeList");
+
+
+          episodeList.innerHTML =
+            eps
+              .map(
+                ep =>
+
+                  '<button ' +
+
+                  'class="episode-btn ' +
+                  (
+                    ep.id === filme.id
+                      ? "active"
+                      : ""
+                  ) +
+                  '" ' +
+
+                  'data-ep-id="' +
+                  esc(ep.id) +
+                  '">' +
+
+                  'Ep ' +
+                  (
+                    Number(ep.episode) ||
+                    1
+                  ) +
+
+                  '</button>'
+              )
+              .join("");
+
+
+          episodeList
+            .querySelectorAll(
+              ".episode-btn"
+            )
+            .forEach(btn => {
+
+              btn.addEventListener(
+                "click",
+                function() {
+
+                  const ep =
+                    filmes.find(
+                      f =>
+                        f.id ===
+                        btn.dataset.epId
+                    );
+
+
+                  if(!ep)
+                    return;
+
+
+                  carregarVideo(
+                    ep.videoUrl
+                  );
+
+
+                  $("playerHeaderTitle")
+                    .textContent =
+
+                    "DeskFlix • " +
+                    ep.title +
+                    " - T" +
+                    (
+                      Number(ep.season) ||
+                      1
+                    ) +
+                    "E" +
+                    (
+                      Number(ep.episode) ||
+                      1
+                    );
+
+
+                  episodeList
+                    .querySelectorAll(
+                      ".episode-btn"
+                    )
+                    .forEach(
+                      b =>
+                        b.classList
+                          .remove("active")
+                    );
+
+
+                  btn.classList
+                    .add("active");
+
+                }
+              );
+
             });
-          });
+
         }
 
-        // Seleciona a temporada do episódio clicado
-        seasonSelect.value = filme.season || 1;
-        mostrarEpisodios(filme.season || 1);
 
-        // Quando trocar de temporada
-        seasonSelect.onchange = function() { mostrarEpisodios(this.value); };
+        const temporadaInicial =
+          Number(filme.season) || 1;
 
-        episodeSelector.classList.remove("hidden");
+
+        seasonSelect.value =
+          temporadaInicial;
+
+
+        mostrarEpisodios(
+          temporadaInicial
+        );
+
+
+        seasonSelect.onchange =
+          function() {
+
+            mostrarEpisodios(
+              this.value
+            );
+
+          };
+
+
+        episodeSelector
+          .classList
+          .remove("hidden");
+
       } else {
-        episodeSelector.classList.add("hidden");
+
+        episodeSelector
+          .classList
+          .add("hidden");
+
+        $("episodeList")
+          .innerHTML = "";
+
       }
 
-      $("playerModal").classList.remove("hidden");
+
+      $("playerModal")
+        .classList
+        .remove("hidden");
+
     }
+
+
+
+    /* =========================================================
+       DETECTAR TIPO DO LINK
+    ========================================================= */
+
+    function detectarTipoVideo(url) {
+
+      if(!url)
+        return "vazio";
+
+
+      let valor =
+        String(url)
+          .trim()
+          .toLowerCase();
+
+
+      /*
+        Remove parâmetros para analisar
+        a extensão.
+      */
+
+      const semHash =
+        valor.split("#")[0];
+
+
+      const semQuery =
+        semHash.split("?")[0];
+
+
+      /*
+        ARQUIVOS DIRETOS
+      */
+
+      if(
+        /\.(mp4|webm|ogg|ogv|mov|m4v)$/i
+          .test(semQuery)
+      ) {
+
+        return "video";
+
+      }
+
+
+      /*
+        STREAM HLS
+      */
+
+      if(
+        /\.m3u8$/i
+          .test(semQuery)
+      ) {
+
+        return "hls";
+
+      }
+
+
+      /*
+        LINKS CONHECIDOS COMO PLAYER
+      */
+
+      if(
+        valor.includes("superflixapi.pro/filme/") ||
+        valor.includes("superflixapi.pro/serie/") ||
+
+        valor.includes("/embed/") ||
+        valor.includes("/player/") ||
+
+        valor.includes("iframe") ||
+
+        valor.includes("embed")
+      ) {
+
+        return "iframe";
+
+      }
+
+
+      /*
+        Outros links HTTP/HTTPS.
+
+        Como não sabemos se é um arquivo
+        ou uma página, tratamos como iframe.
+
+        Isso permite usar links de páginas
+        de players sem precisar alterar
+        manualmente.
+      */
+
+      if(
+        valor.startsWith("http://") ||
+        valor.startsWith("https://")
+      ) {
+
+        return "iframe";
+
+      }
+
+
+      return "desconhecido";
+
+    }
+
+
+
+    /* =========================================================
+       CARREGAR VÍDEO
+    ========================================================= */
 
     function carregarVideo(videoUrl) {
-      const videoWrap = $("videoWrap");
-      videoUrl = videoUrl || "";
-      if(videoUrl.includes("embed") || videoUrl.includes("iframe") || videoUrl.includes("player")) {
-        videoWrap.innerHTML = '<iframe class="player-iframe" src="' + videoUrl + '" allowfullscreen allow="autoplay; encrypted-media"></iframe>';
-      } else if(videoUrl) {
-        videoWrap.innerHTML = '<video id="videoPlayer" controls playsinline src="' + videoUrl + '"></video>';
-      } else {
-        videoWrap.innerHTML = '<div style="width:100%;height:100%;display:grid;place-items:center;color:var(--muted);background:#000;">Nenhum vídeo disponível</div>';
+
+      const videoWrap =
+        $("videoWrap");
+
+
+      /*
+        Limpa player anterior.
+      */
+
+      videoWrap.innerHTML =
+        '<div class="player-loading">' +
+        'Carregando vídeo...' +
+        '</div>';
+
+
+      videoUrl =
+        String(videoUrl || "")
+          .trim();
+
+
+      if(!videoUrl) {
+
+        mostrarErroPlayer(
+          "Nenhum vídeo disponível.",
+          ""
+        );
+
+        return;
+
       }
+
+
+      /*
+        Segurança básica.
+
+        Só permitimos URLs HTTP/HTTPS
+        para conteúdo externo.
+      */
+
+      if(
+        !/^https?:\/\//i
+          .test(videoUrl)
+      ) {
+
+        mostrarErroPlayer(
+          "URL de vídeo inválida.",
+          videoUrl
+        );
+
+        return;
+
+      }
+
+
+      const tipo =
+        detectarTipoVideo(
+          videoUrl
+        );
+
+
+
+      /* =======================================================
+         VÍDEO DIRETO
+      ======================================================= */
+
+      if(tipo === "video") {
+
+        criarVideoHTML(
+          videoUrl
+        );
+
+        return;
+
+      }
+
+
+
+      /* =======================================================
+         HLS / M3U8
+      ======================================================= */
+
+      if(tipo === "hls") {
+
+        criarHLSPlayer(
+          videoUrl
+        );
+
+        return;
+
+      }
+
+
+
+      /* =======================================================
+         IFRAME / PÁGINA DE PLAYER
+      ======================================================= */
+
+      if(tipo === "iframe") {
+
+        criarIframePlayer(
+          videoUrl
+        );
+
+        return;
+
+      }
+
+
+
+      mostrarErroPlayer(
+        "Formato de vídeo não reconhecido.",
+        videoUrl
+      );
+
     }
+
+
+
+    /* =========================================================
+       CRIAR PLAYER DE VÍDEO DIRETO
+    ========================================================= */
+
+    function criarVideoHTML(url) {
+
+      const video =
+        document.createElement(
+          "video"
+        );
+
+
+      video.id =
+        "videoPlayer";
+
+
+      video.controls =
+        true;
+
+
+      video.playsInline =
+        true;
+
+
+      video.preload =
+        "metadata";
+
+
+      video.src =
+        url;
+
+
+      video.setAttribute(
+        "controlsList",
+        "nodownload"
+      );
+
+
+      video.addEventListener(
+        "error",
+        function() {
+
+          mostrarErroPlayer(
+            "Não foi possível reproduzir este arquivo de vídeo.",
+            url
+          );
+
+        }
+      );
+
+
+      $("videoWrap")
+        .innerHTML = "";
+
+
+      $("videoWrap")
+        .appendChild(video);
+
+    }
+
+
+
+    /* =========================================================
+       PLAYER HLS
+       
+       Se o navegador suportar HLS nativamente,
+       usamos <video>.
+       
+       Caso contrário, tentamos carregar hls.js.
+    ========================================================= */
+
+    function criarHLSPlayer(url) {
+
+      const video =
+        document.createElement(
+          "video"
+        );
+
+
+      video.id =
+        "videoPlayer";
+
+
+      video.controls =
+        true;
+
+
+      video.playsInline =
+        true;
+
+
+      video.autoplay =
+        false;
+
+
+      $("videoWrap")
+        .innerHTML = "";
+
+
+      $("videoWrap")
+        .appendChild(video);
+
+
+      /*
+        Safari/iOS e alguns navegadores
+        possuem suporte HLS nativo.
+      */
+
+      if(
+        video.canPlayType(
+          "application/vnd.apple.mpegurl"
+        )
+      ) {
+
+        video.src =
+          url;
+
+        return;
+
+      }
+
+
+      /*
+        Chrome/Android normalmente
+        precisa de hls.js.
+      */
+
+      if(
+        window.Hls &&
+        window.Hls.isSupported()
+      ) {
+
+        const hls =
+          new Hls();
+
+
+        hls.loadSource(
+          url
+        );
+
+
+        hls.attachMedia(
+          video
+        );
+
+
+        window.currentHls =
+          hls;
+
+
+        hls.on(
+          Hls.Events.ERROR,
+          function(event, data) {
+
+            console.error(
+              "Erro HLS:",
+              data
+            );
+
+          }
+        );
+
+        return;
+
+      }
+
+
+      /*
+        Se hls.js ainda não estiver
+        carregado, carregamos dinamicamente.
+      */
+
+      carregarHlsJs(
+        function() {
+
+          if(
+            window.Hls &&
+            window.Hls.isSupported()
+          ) {
+
+            const hls =
+              new Hls();
+
+
+            hls.loadSource(
+              url
+            );
+
+
+            hls.attachMedia(
+              video
+            );
+
+
+            window.currentHls =
+              hls;
+
+          } else {
+
+            mostrarErroPlayer(
+              "Seu navegador não suporta este streaming HLS.",
+              url
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+
+    /* =========================================================
+       CARREGAR HLS.JS
+    ========================================================= */
+
+    function carregarHlsJs(callback) {
+
+      if(window.Hls) {
+
+        callback();
+
+        return;
+
+      }
+
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+
+      script.src =
+        "https://cdn.jsdelivr.net/npm/hls.js@latest";
+
+
+      script.onload =
+        callback;
+
+
+      script.onerror =
+        function() {
+
+          mostrarErroPlayer(
+            "Não foi possível carregar o suporte HLS.",
+            ""
+          );
+
+        };
+
+
+      document.head
+        .appendChild(script);
+
+    }
+
+
+
+    /* =========================================================
+       PLAYER IFRAME
+    ========================================================= */
+
+    function criarIframePlayer(url) {
+
+      const iframe =
+        document.createElement(
+          "iframe"
+        );
+
+
+      iframe.className =
+        "player-iframe";
+
+
+      iframe.src =
+        url;
+
+
+      iframe.allowFullscreen =
+        true;
+
+
+      /*
+        Permissões necessárias
+        para players externos.
+      */
+
+      iframe.setAttribute(
+        "allow",
+        "autoplay *; " +
+        "encrypted-media *; " +
+        "picture-in-picture *; " +
+        "fullscreen *; " +
+        "clipboard-write *; " +
+        "accelerometer *; " +
+        "gyroscope *; " +
+        "web-share *"
+      );
+
+
+      iframe.setAttribute(
+        "allowfullscreen",
+        ""
+      );
+
+
+      iframe.setAttribute(
+        "webkitallowfullscreen",
+        ""
+      );
+
+
+      iframe.setAttribute(
+        "mozallowfullscreen",
+        ""
+      );
+
+
+      iframe.referrerPolicy =
+        "origin";
+
+
+      iframe.addEventListener(
+        "load",
+        function() {
+
+          console.log(
+            "Player carregado:",
+            url
+          );
+
+        }
+      );
+
+
+      $("videoWrap")
+        .innerHTML = "";
+
+
+      $("videoWrap")
+        .appendChild(
+          iframe
+        );
+
+    }
+
+
+
+    /* =========================================================
+       ERRO DO PLAYER
+    ========================================================= */
+
+    function mostrarErroPlayer(
+      mensagem,
+      url
+    ) {
+
+      $("videoWrap")
+        .innerHTML =
+
+        '<div class="player-error">' +
+
+        '<strong>' +
+        esc(mensagem) +
+        '</strong>' +
+
+        (
+          url
+            ? '<small>' +
+              esc(url) +
+              '</small>'
+            : ''
+        ) +
+
+        '</div>';
+
+    }
+
+
+
+    /* =========================================================
+       FECHAR PLAYER
+    ========================================================= */
 
     function fecharPlayer() {
-      // Para o vídeo/iframe
-      $("videoWrap").innerHTML = '<video id="videoPlayer" controls playsinline>Seu navegador não suporta vídeo HTML5.</video>';
-      $("playerModal").classList.add("hidden");
-    }
 
-    /* ===== EVENTOS ===== */
+      /*
+        Destrói HLS se existir.
+      */
 
-    // Filtrar por categoria
-    document.querySelectorAll(".category").forEach(btn => btn.addEventListener("click", function() {
-      document.querySelectorAll(".category").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      const cat = btn.dataset.category;
-      if(cat === "Todos") {
-        desenharCatalogo(filmes);
-      } else {
-        desenharCatalogo(filmes.filter(f => f.category === cat || f.type === cat));
-      }
-    }));
+      if(window.currentHls) {
 
-    // Hero - assistir destaque
-    $("heroWatch").addEventListener("click", function() { abrirPlayer(filmes[0]); });
-
-    // Fechar player
-    $("closePlayer").addEventListener("click", fecharPlayer);
-    $("playerModal").addEventListener("click", function(e) { if(e.target.id === "playerModal") fecharPlayer(); });
-    document.addEventListener("keydown", function(e) { if(e.key === "Escape") fecharPlayer(); });
-
-    // Botão Revenda
-    $("resaleBtn").addEventListener("click", function() { window.location.href = "revenda.html"; });
-
-    // Botão Conta
-    $("accountBtn").addEventListener("click", function() { mostrarToast($("accountEmail").textContent); });
-
-
-
-    // Busca nos filmes do Firestore
-    function buscarLocal(termo) {
-      const t = termo.toLowerCase();
-      const resultados = filmes.filter(f => f.title.toLowerCase().includes(t) || (f.description||"").toLowerCase().includes(t));
-      $("searchStatus").textContent = resultados.length ? 'Resultados para "' + termo + '"' : "Nenhum resultado encontrado.";
-      $("searchResults").innerHTML = resultados.map(cardHTML).join("") || "<p class='status'>Tente outro título.</p>";
-      $("searchResults").querySelectorAll(".movie-card").forEach(card => {
-        card.addEventListener("click", function() { abrirPlayer(filmes.find(f => f.id === card.dataset.id)); });
-      });
-    }
-    $("searchBtn").addEventListener("click", function() { const termo = $("searchInput").value.trim(); if(termo) buscarLocal(termo); });
-    $("searchInput").addEventListener("keydown", function(e) { if(e.key === "Enter") $("searchBtn").click(); });
-
-    // Navegação inferior
-    document.querySelectorAll(".nav-item").forEach(btn => btn.addEventListener("click", function() {
-      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      const nav = btn.dataset.nav;
-      if(nav === "search") {
-        $("searchPanel").classList.remove("hidden");
-        $("searchInput").focus();
-        window.scrollTo({top:0, behavior:"smooth"});
-      } else if(nav === "home") {
-        $("searchPanel").classList.add("hidden");
-        window.scrollTo({top:0, behavior:"smooth"});
-      } else if(nav === "subscription") {
-        mostrarToast("Área de assinatura em breve.");
-      } else {
-        mostrarToast("Configurações em breve.");
-      }
-    }));
-
-    /* ===== FIREBASE AUTH: verifica login ===== */
-    auth.onAuthStateChanged(async function(user) {
-      if(user) {
-        $("accountEmail").textContent = user.email || "Minha conta";
-        // Busca o cargo do usuário no Firestore
         try {
-          const userRef = db.collection("users").doc(user.uid);
-          const userSnap = await userRef.get();
-          if(!userSnap.exists) {
-            await userRef.set({
-              email: user.email || "",
-              role: "none",
-              createdBy: null,
-              subscriptionEnd: null,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            userRole = "none";
-          } else {
-            userRole = userSnap.data().role || "none";
-          }
+
+          window.currentHls.destroy();
+
         } catch(e) {
-          console.warn("Erro ao buscar cargo do usuário:", e);
-          // Se for o dono pelo email, dá acesso total
-          if(user.email === "kayronyuriemiguel@gmail.com") userRole = "dono";
+
+          console.warn(e);
+
         }
-        // Carrega os filmes filtrados pelo cargo
-        carregarFilmes();
-      } else {
-        // Não logado: volta pro login
-        window.location.href = "index.html";
+
+        window.currentHls =
+          null;
+
       }
-    });
+
+
+      /*
+        Limpa completamente
+        o iframe/vídeo anterior.
+      */
+
+      $("videoWrap")
+        .innerHTML =
+
+        '<video ' +
+        'id="videoPlayer" ' +
+        'controls ' +
+        'playsinline>' +
+
+        'Seu navegador não suporta vídeo HTML5.' +
+
+        '</video>';
+
+
+      $("playerModal")
+        .classList
+        .add("hidden");
+
+    }
+
+
+
+    /* =========================================================
+       CATEGORIAS
+    ========================================================= */
+
+    document
+      .querySelectorAll(".category")
+      .forEach(btn => {
+
+        btn.addEventListener(
+          "click",
+          function() {
+
+            document
+              .querySelectorAll(
+                ".category"
+              )
+              .forEach(
+                b =>
+                  b.classList
+                    .remove("active")
+              );
+
+
+            btn.classList
+              .add("active");
+
+
+            const cat =
+              btn.dataset.category;
+
+
+            if(cat === "Todos") {
+
+              desenharCatalogo(
+                filmes
+              );
+
+            } else {
+
+              desenharCatalogo(
+
+                filmes.filter(
+                  f =>
+                    f.category === cat ||
+                    f.type === cat ||
+                    (
+                      cat === "Série" &&
+                      (
+                        f.type === "serie" ||
+                        f.type === "série"
+                      )
+                    )
+                )
+
+              );
+
+            }
+
+          }
+        );
+
+      });
+
+
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+
+    $("heroWatch")
+      .addEventListener(
+        "click",
+        function() {
+
+          if(filmes.length > 0) {
+
+            abrirPlayer(
+              filmes[0]
+            );
+
+          }
+
+        }
+      );
+
+
+
+    /* =========================================================
+       FECHAR PLAYER
+    ========================================================= */
+
+    $("closePlayer")
+      .addEventListener(
+        "click",
+        fecharPlayer
+      );
+
+
+    $("playerModal")
+      .addEventListener(
+        "click",
+        function(e) {
+
+          if(
+            e.target.id ===
+            "playerModal"
+          ) {
+
+            fecharPlayer();
+
+          }
+
+        }
+      );
+
+
+    document.addEventListener(
+      "keydown",
+      function(e) {
+
+        if(
+          e.key === "Escape"
+        ) {
+
+          fecharPlayer();
+
+        }
+
+      }
+    );
+
+
+
+    /* =========================================================
+       BOTÃO REVENDA
+    ========================================================= */
+
+    $("resaleBtn")
+      .addEventListener(
+        "click",
+        function() {
+
+          window.location.href =
+            "revenda.html";
+
+        }
+      );
+
+
+
+    /* =========================================================
+       CONTA
+    ========================================================= */
+
+    $("accountBtn")
+      .addEventListener(
+        "click",
+        function() {
+
+          mostrarToast(
+            $("accountEmail")
+              .textContent
+          );
+
+        }
+      );
+
+
+
+    /* =========================================================
+       BUSCA
+    ========================================================= */
+
+    function buscarLocal(termo) {
+
+      const t =
+        termo
+          .toLowerCase();
+
+
+      const resultados =
+        filmes.filter(
+          f =>
+
+            f.title
+              .toLowerCase()
+              .includes(t)
+
+            ||
+
+            (
+              f.description || ""
+            )
+              .toLowerCase()
+              .includes(t)
+
+        );
+
+
+      $("searchStatus")
+        .textContent =
+
+        resultados.length
+
+          ? 'Resultados para "' +
+            termo +
+            '"'
+
+          : "Nenhum resultado encontrado.";
+
+
+      $("searchResults")
+        .innerHTML =
+
+        resultados
+          .map(cardHTML)
+          .join("")
+
+        ||
+
+        "<p class='status'>" +
+        "Tente outro título." +
+        "</p>";
+
+
+      $("searchResults")
+        .querySelectorAll(
+          ".movie-card"
+        )
+        .forEach(card => {
+
+          card.addEventListener(
+            "click",
+            function() {
+
+              abrirPlayer(
+
+                filmes.find(
+                  f =>
+                    f.id ===
+                    card.dataset.id
+                )
+
+              );
+
+            }
+          );
+
+        });
+
+    }
+
+
+    $("searchBtn")
+      .addEventListener(
+        "click",
+        function() {
+
+          const termo =
+            $("searchInput")
+              .value
+              .trim();
+
+
+          if(termo) {
+
+            buscarLocal(
+              termo
+            );
+
+          }
+
+        }
+      );
+
+
+    $("searchInput")
+      .addEventListener(
+        "keydown",
+        function(e) {
+
+          if(
+            e.key === "Enter"
+          ) {
+
+            $("searchBtn")
+              .click();
+
+          }
+
+        }
+      );
+
+
+
+    /* =========================================================
+       NAVEGAÇÃO INFERIOR
+    ========================================================= */
+
+    document
+      .querySelectorAll(".nav-item")
+      .forEach(btn => {
+
+        btn.addEventListener(
+          "click",
+          function() {
+
+            document
+              .querySelectorAll(
+                ".nav-item"
+              )
+              .forEach(
+                b =>
+                  b.classList
+                    .remove("active")
+              );
+
+
+            btn.classList
+              .add("active");
+
+
+            const nav =
+              btn.dataset.nav;
+
+
+            if(nav === "search") {
+
+              $("searchPanel")
+                .classList
+                .remove("hidden");
+
+
+              $("searchInput")
+                .focus();
+
+
+              window.scrollTo({
+
+                top: 0,
+
+                behavior:
+                  "smooth"
+
+              });
+
+
+            } else if(nav === "home") {
+
+              $("searchPanel")
+                .classList
+                .add("hidden");
+
+
+              window.scrollTo({
+
+                top: 0,
+
+                behavior:
+                  "smooth"
+
+              });
+
+
+            } else if(
+              nav === "subscription"
+            ) {
+
+              mostrarToast(
+                "Área de assinatura em breve."
+              );
+
+
+            } else {
+
+              mostrarToast(
+                "Configurações em breve."
+              );
+
+            }
+
+          }
+        );
+
+      });
+
+
+
+    /* =========================================================
+       FIREBASE AUTH
+    ========================================================= */
+
+    auth.onAuthStateChanged(
+      async function(user) {
+
+        if(user) {
+
+          $("accountEmail")
+            .textContent =
+            user.email ||
+            "Minha conta";
+
+
+          try {
+
+            const userRef =
+              db
+                .collection("users")
+                .doc(user.uid);
+
+
+            const userSnap =
+              await userRef.get();
+
+
+            if(!userSnap.exists) {
+
+              await userRef.set({
+
+                email:
+                  user.email || "",
+
+                role:
+                  "none",
+
+                createdBy:
+                  null,
+
+                subscriptionEnd:
+                  null,
+
+                createdAt:
+                  firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+              });
+
+
+              userRole =
+                "none";
+
+            } else {
+
+              userRole =
+                userSnap.data().role ||
+                "none";
+
+            }
+
+
+          } catch(e) {
+
+            console.warn(
+              "Erro ao buscar cargo do usuário:",
+              e
+            );
+
+
+            /*
+              Mantém a regra do dono
+              pelo email.
+            */
+
+            if(
+              user.email ===
+              "kayronyuriemiguel@gmail.com"
+            ) {
+
+              userRole =
+                "dono";
+
+            }
+
+          }
+
+
+          /*
+            Agora carrega o catálogo.
+          */
+
+          carregarFilmes();
+
+
+        } else {
+
+          /*
+            Usuário não logado:
+            volta para o login.
+          */
+
+          window.location.href =
+            "index.html";
+
+        }
+
+      }
+    );
+
   </script>
+
 </body>
 </html>
